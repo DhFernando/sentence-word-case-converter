@@ -34,11 +34,27 @@ const inverseCase = (s) => {
     return inverseWordArray.join(" ")
 }
 
+const titleCase = (s) => {
+    let lowerCaseWordArray = lowerCase(s).split(" ");
+    let lowers = ['a', 'an', 'the', 'and', 'but', 'or', 'for', 'nor',
+    'as', 'at', 'by', 'for', 'from', 'in', 'into', 'near', 'of', 'on', 'onto', 'to', 'with'];
+    let titleCaseArray = [];
+    lowerCaseWordArray.forEach(word => {
+        if(lowers.indexOf(word) > -1) {
+            titleCaseArray.push(word);
+        }else {
+            titleCaseArray.push(word[0].toUpperCase() + word.substring(1));
+        }
+    });
+    return titleCaseArray.join(" ");
+}
+
 // Function calls
 
-var sentence = "heLLow Worl";
+var sentence = "heLLow Worl tO";
 console.log(upperCase(sentence));
 console.log(lowerCase(sentence));
 console.log(capitalizedCase(sentence));
 console.log(inverseCase(sentence));
 console.log(sentenceCase(sentence));
+console.log(titleCase(sentence));
