@@ -7,47 +7,98 @@
 </head>
 <body>
     <video class="video" width="600px" controls></video>
+    <video id="face-camera" class="video" width="600px" autoplay controls></video>
     <button class="record-btn">record</button>
+    <button class="record-stop-btn">record-stop</button>
+    <a id="download"  ><button type="button" class="btn btn-primary mb-4"> Download</button></a>
     <script>
         let btn = document.querySelector(".record-btn")
+        let btnstop = document.querySelector(".record-stop-btn")
+        let gum = document.getElementById("face-camera")
+        let downloadLink = document.getElementById("download")
 
-        btn.addEventListener("click", async function () {
-        let stream = await navigator.mediaDevices.getDisplayMedia({
-            video: true,
-            audio: true
+        const handleRecord = ({ stream, mimeType }) => {
+            let recordedChunks = [];
+            stopped = false;
+            const mediaRecorder = new MediaRecorder(stream);
+            mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) {
+                recordedChunks.push(e.data);
+            }
+            if (shouldStop === true && stopped === false) {
+                mediaRecorder.stop();
+                stopped = true;
+            }
+            };
+
+            mediaRecorder.onstop = async () => {
+            const blob = new Blob(recordedChunks, {
+                type: mimeType,
+            });
+            recordedChunks = [];
+            const filename = window.prompt('Enter file name');
+            let video = document.querySelector("video");
+            video.src = URL.createObjectURL(blob)
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = `${
+                filename || 'recording'
+            }.mp4`;
+
+            stream2.getVideoTracks()[0].stop();
+            gum.srcObject = null;
+            };
+            mediaRecorder.start(200);
+        }
+
+        const init = async (constraints) => {
+            try {
+                stream2 = await navigator.mediaDevices.getUserMedia(constraints);
+                gum.srcObject = stream2;
+            } catch (e) {
+                console.error(e);
+            }
+        } 
+
+        btnstop.addEventListener("click", async function (){
+            shouldStop = true
         })
 
-        //needed for better browser support
-        const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp9") 
-                    ? "video/webm; codecs=vp9" 
-                    : "video/webm"
-            let mediaRecorder = new MediaRecorder(stream, {
-                mimeType: mime
-            })
+        let shouldStop = false;
+        btn.addEventListener("click", async function (){
+            const mimeType = 'video/mp4';
+            shouldStop = false;
+            const constraints = {
+                video: {
+                    width: 150,
+                    height: 150,
+                },
+            };
+            try{
+                await init(constraints);
+                if (!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) {
+                    return window.alert('Screen Record not supported!');
+                }
+                let stream = null;
+                const displayStream = await navigator.mediaDevices.getDisplayMedia({
+                    video: { cursor: 'motion' },
+                    audio: { echoCancellation: true },
+                });
 
-            let chunks = []
-            mediaRecorder.addEventListener('dataavailable', function(e) {
-                chunks.push(e.data)
-            })
-
-            mediaRecorder.addEventListener('stop', function(){
-            let blob = new Blob(chunks, {
-                type: chunks[0].type
-            })
-            let url = URL.createObjectURL(blob)
-
-            let video = document.querySelector("video")
-            video.src = url
-
-            let a = document.createElement('a')
-            a.href = url
-            a.download = 'video.webm'
-            a.click()
+                const voiceStream = await navigator.mediaDevices.getUserMedia({
+                    audio: { echoCancellation: true },
+                    video: false,
+                });
+                const tracks = [
+                    ...displayStream.getTracks(),
+                    ...voiceStream.getAudioTracks(),
+                ];
+                stream = new MediaStream(tracks);
+                handleRecord({ stream, mimeType });
+            } catch (e) {
+                console.error(e);
+            }
         })
 
-            //we have to start the recorder manually
-            mediaRecorder.start()
-        })
 
     </script>
 </body>
