@@ -1,0 +1,23 @@
+{
+  "name": "APPLICATION",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DhFernando/sentence-word-case-converter.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DhFernando/sentence-word-case-converter/issues"
+  },
+  "homepage": "https://github.com/DhFernando/sentence-word-case-converter#readme",
+  "devDependencies": {
+    "jest": "^28.1.2"
+  }
+}

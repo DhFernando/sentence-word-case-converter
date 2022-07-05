@@ -76,7 +76,7 @@
             try{
                 await init(constraints);
                 if (!(navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia)) {
-                    return window.alert('Screen Record not supported!');
+                    return window.alert('Screen Record not supported! please change your browser');
                 }
                 let stream = null;
                 const displayStream = await navigator.mediaDevices.getDisplayMedia({
