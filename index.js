@@ -1,22 +1,28 @@
 // Functions
 
-const upperCase = (s) => s.toUpperCase();
-const lowerCase = (s) => s.toLowerCase();
+let main_input = document.getElementById("main_input").value;
+let output = document.getElementById("outPut")
 
-const sentenceCase = (s) => {
-    return lowerCase(s)[0].toUpperCase() + lowerCase(s).substring(1);
+var s = main_input;
+const upperCase = () => output.value = s.toUpperCase();
+const lowerCase = () => output.value = s.toLowerCase();
+
+const updateSentence = () => s = document.getElementById("main_input").value;
+
+const sentenceCase = () => {
+    output.value = lowerCase(s)[0].toUpperCase() + lowerCase(s).substring(1);
 }
 
-const capitalizedCase = (s) => {
+const capitalizedCase = () => {
     let lowerCaseWordArray = lowerCase(s).split(" ");
     let array = [];
     lowerCaseWordArray.forEach(el => {
         array.push(el[0].toUpperCase() + el.substring(1));
     });
-    return array.join(" ")
+    output.value = array.join(" ")
 }
 
-const inverseCase = (s) => {
+const inverseCase = () => {
     let wordArray = s.split(" ");
     let inverseWordArray = [];
     wordArray.forEach(word => {
@@ -31,12 +37,12 @@ const inverseCase = (s) => {
         inverseWordArray.push(inversWord.join(''))
         inversWord = []
     });
-    return inverseWordArray.join(" ")
+    output.value = inverseWordArray.join(" ")
 }
 
-const titleCase = (s) => {
+const titleCase = () => {
     let lowerCaseWordArray = lowerCase(s).split(" ");
-    let lowers = ['a', 'an', 'the', 'and', 'but', 'or', 'for', 'nor',
+    let lowers = ['a', 'an', 'am', 'is', 'are', 'the', 'and', 'but', 'or', 'for', 'nor',
     'as', 'at', 'by', 'for', 'from', 'in', 'into', 'near', 'of', 'on', 'onto', 'to', 'with'];
     let titleCaseArray = [];
     lowerCaseWordArray.forEach(word => {
@@ -46,15 +52,5 @@ const titleCase = (s) => {
             titleCaseArray.push(word[0].toUpperCase() + word.substring(1));
         }
     });
-    return titleCaseArray.join(" ");
+    output.value = titleCaseArray.join(" ");
 }
-
-// Function calls
-
-var sentence = "heLLow Worl tO";
-console.log(upperCase(sentence));
-console.log(lowerCase(sentence));
-console.log(capitalizedCase(sentence));
-console.log(inverseCase(sentence));
-console.log(sentenceCase(sentence));
-console.log(titleCase(sentence));
